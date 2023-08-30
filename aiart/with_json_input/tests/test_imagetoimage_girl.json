@@ -1,0 +1,7 @@
+{
+    "file": "tests/resources/imadamio.jpeg",
+    "url": "https://imadamio.com/s3/skiyaki/uploads/link/image/40820/bg_footer_pc.jpg",
+    "prompt": "美少女",
+    "negative_prompt": "敏感信息,肥胖,畸形,变异,丑陋,毁容,痤疮",
+    "style": "201"
+}

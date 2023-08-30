@@ -5,7 +5,7 @@
         <title>腾讯云AI绘画</title>
     </head>
     <body>
-        <h1>AI绘画</h1>
+        <h1>AI文生图绘画</h1>
         
         文本描述：
         <input type="text" id="prompt" name="Prompt" value="雨中,竹林,小路"/>
@@ -44,9 +44,18 @@
             <option value="401">通用写实风格</option>
         </select>
         <br>
-        <input type="submit" onclick="text_generate_image()" value="文生图"/><label id="e"></label>
+        
+        <table>
+            <tr>
+                <td><input type="submit" onclick="text_generate_image()" value="文生图"/></td>
+                <td><li><a href="/image">图生图</a></li></td>
+            </tr>
+        </table>
+        <label id="e"></label>
+        
         <br>
-        <img id="img" width="1024" height="1024"/>
+        <img id="img" width="1024" height="1024"/></td>
+        </table>
 
         <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script>

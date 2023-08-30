@@ -23,23 +23,23 @@ if __name__ == '__main__':
             os.environ.get("TENCENTCLOUD_SECRET_ID"),
             os.environ.get("TENCENTCLOUD_SECRET_KEY"))
         client = aiart_client.AiartClient(cred, os.environ.get("TENCENTCLOUD_REGION"))
-
-        req = models.TextToImageRequest()
+        
+        req = models.ImageToImageRequest()
+        req.InputUrl = obj.get('url')
         req.Prompt = obj.get('prompt')
         req.NegativePrompt = obj.get('negative_prompt')
         req.Styles = []
         req.Styles.append(obj.get('style'))
         req.LogoAdd = 0
 
-        resp = client.TextToImage(req)
+        resp = client.ImageToImage(req)
         out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "build")
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
         out_file = os.path.join(out_dir, resp.RequestId + ".jpeg")
-        # print(resp.ResultImage)
         with open(out_file, "wb") as f:
             f.write(base64.b64decode(resp.ResultImage))
-        print("success. RequestId:" + resp.RequestId)
+        print("success. requestId:" + resp.RequestId)
     except TencentCloudSDKException as e:
         print("failure. " + str(e))
     except Exception as e:

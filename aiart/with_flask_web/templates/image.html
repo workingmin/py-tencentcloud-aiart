@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>腾讯云AI绘画</title>
+    </head>
+    <body>
+        <h1>AI图生图绘画</h1>
+        
+        <form method="post" enctype="multipart/form-data">
+            <div>
+                <input type="file" id="file" name="ImageFile" accept="image/png,image/jpeg"/>
+            </div>
+        </form>
+
+        URL：
+        <input type="text" id="url" name="Url"/>
+        <br>
+
+        文本描述：
+        <input type="text" id="prompt" name="Prompt"/>
+        <br>
+        
+        反向文本描述：
+        <input type="text" id="negative_prompt" name="NegativePrompt"/>
+        <br>
+        
+        绘画风格：
+        <select id="style" name="Style">
+            <option value="106">水彩画</option>
+            <option value ="110">2.5D</option>
+            <option value="201">日系动漫</option>
+            <option value ="202">美系动漫</option>
+            <option value ="203">唯美古风</option>
+        </select>
+        <br>
+        <table>
+            <tr>
+                <td><input type="submit" onclick="image_file_generate_image()" value="文件图生图"/></td>
+                <td><input type="submit" onclick="image_url_generate_image()" value="URL图生图"/></td>
+                <td><li><a href="/text">文生图</a></li></td>
+            </tr>
+        </table>
+        <label id="e"></label>
+        <br>
+        <img id="img" width="1024" height="1024"/></td>
+        </table>
+
+        <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script>
+            function image_file_generate_image() {
+                $("#e").text("");
+
+                var f = document.getElementById('file').files[0];
+                var fr = new FileReader();
+                fr.onload = function() {
+                    var base64 = this.result.split(';base64,')[1];
+                    var prompt = document.getElementById("prompt").value
+                    var negative_prompt = document.getElementById("negative_prompt").value
+                    var style = document.getElementById("style").value
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/imagetoimage", true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    var body = JSON.stringify({
+                        "base64": base64,
+                        "prompt": prompt,
+                        "negative_prompt": negative_prompt,
+                        "style": style
+                    });
+                    xhr.onload = function() {
+                        var obj = JSON.parse(this.responseText);
+                        var data = obj.data;
+                        if(data != undefined && data != null && data.length > 0) {
+                            $("#img").attr("src", "data:image/jpeg;base64," + data);
+                        }
+                        else {
+                            $("#e").css("color", "red").text(obj.error);
+                        }
+                    }
+                    xhr.send(body)
+                }
+                if(f) {
+                    fr.readAsDataURL(f);
+                }
+                else {
+                    $("#e").css("color", "red").text("file is required");
+                }
+            };
+
+            function image_url_generate_image() {
+                $("#e").text("");
+
+                var url = document.getElementById("url").value
+                var prompt = document.getElementById("prompt").value
+                var negative_prompt = document.getElementById("negative_prompt").value
+                var style = document.getElementById("style").value
+
+                if(url === undefined || url === null || url === "" || url.trim().length == 0) {
+                    $("#e").css("color", "red").text("url is required");
+                    return
+                }
+
+                try {
+                    new URL(url);
+                }
+                catch (e) {
+                    $("#e").css("color", "red").text("url invalid");
+                    return
+                }
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/imagetoimage", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var body = JSON.stringify({
+                    "url": url,
+                    "prompt": prompt,
+                    "negative_prompt": negative_prompt,
+                    "style": style
+                });
+                xhr.onload = function() {
+                    var obj = JSON.parse(this.responseText);
+                    var data = obj.data;
+                    if(data != undefined && data != null && data.length > 0) {
+                        $("#img").attr("src", "data:image/jpeg;base64," + data);
+                    }
+                    else {
+                        $("#e").css("color", "red").text(obj.error);
+                    }
+                }
+                xhr.send(body)
+            };
+        </script>
+    </body>
+</html>
