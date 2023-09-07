@@ -43,6 +43,10 @@ def texttoimage():
         req.Styles.append(data.get('style'))
         req.LogoAdd = 0
         
+        result_config = models.ResultConfig()
+        result_config.Resolution = '768:1024'
+        req.ResultConfig = result_config
+        
         resp = client.TextToImage(req)
         out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "build")
         if not os.path.exists(out_dir):
@@ -85,6 +89,10 @@ def imagetoimage():
         req.Styles.append(data.get('style'))
         req.LogoAdd = 0
         
+        result_config = models.ResultConfig()
+        result_config.Resolution = '768:1024'
+        req.ResultConfig = result_config
+        
         resp = client.ImageToImage(req)
         out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "build")
         if not os.path.exists(out_dir):
@@ -93,7 +101,6 @@ def imagetoimage():
         with open(out_file, "wb") as f:
             f.write(base64.b64decode(resp.ResultImage))
         
-        app.logger.info("input: %s, output: %s" % (data, out_file))
         return jsonify({
             "data": resp.ResultImage
         })
