@@ -36,7 +36,6 @@ if __name__ == '__main__':
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
         out_file = os.path.join(out_dir, resp.RequestId + ".jpeg")
-        # print(resp.ResultImage)
         with open(out_file, "wb") as f:
             f.write(base64.b64decode(resp.ResultImage))
         print("success. RequestId:" + resp.RequestId)
